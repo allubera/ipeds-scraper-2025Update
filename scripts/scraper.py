@@ -2,6 +2,9 @@
 """
 Scrape IPEDS http://nces.ed.gov/ipeds/datacenter/DataFiles.aspx
 Hannah Recht, 03-24-16
+
+Updated to simplify because IPEDs now has a page with all years in one location. No needs to use continue finder at the current time. 
+Amber Lubera, 02-14-2025 
 """
 
 from bs4 import BeautifulSoup
@@ -9,7 +12,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 import json
 
-driver = webdriver.Firefox()
+driver = webdriver.Chrome()
 
 # Directory url for downloads
 dirurl = "http://nces.ed.gov/ipeds/datacenter/"
@@ -34,12 +37,16 @@ def scrapetable():
         entry['name'] = (tds[3].a.get('href')[5:-4]).lower()
         files.append(entry)
 
-# There is no direct link to the complete data files view. Need to press some buttons.
-# If the site changes this will probably all break yay
+# The direct link to view complete data files given below. 
+# Previous code commented out but left in case website changes again
 
 # Complete data files entry point
-driver.get('http://nces.ed.gov/ipeds/datacenter/login.aspx?gotoReportId=7')
+driver.get('https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx?year=-1&surveyNumber=-1&sid=7db6a4c4-3571-4cef-b3f3-59df9576a9e7&rtid=7')
 
+# Go directly to scrapetable 
+scrapetable()
+
+'''
 # Press continue
 driver.find_element_by_xpath("//input[@id='ImageButton1' and @title='Continue']").click()
 
@@ -60,6 +67,8 @@ def chooseyear(year):
 
 # -1 = All years
 chooseyear('-1')
+
+'''
 
 # Export to json
 with open('data/ipedsfiles.json', 'w') as fp:
