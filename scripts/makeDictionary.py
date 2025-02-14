@@ -61,6 +61,10 @@ def downloadDicts(start, stop):
                 # Remove zip file
                 os.remove("dict/" + str(i) +'/' + urlname)
 
+# As of the current date, xlrd has explicitly removed support for anything other than xls files.
+# I am working on a fix, but current the problem only relates to making the master dictionary and doesn't hinder downloading the dictionaries. For now, I will just comment out 
+
+'''
 # For the Excel dictionaries, compile the varlist tabs
 def makeMasterDict(start, stop):
     print("*****************************")
@@ -87,6 +91,6 @@ def makeMasterDict(start, stop):
                         varrow = worksheet.row_values(r)
                         row = rowstart + varrow
                         c.writerow(row)
-
+'''
 downloadDicts(args.start, args.stop)
-makeMasterDict(args.start, args.stop)
+#makeMasterDict(args.start, args.stop)
