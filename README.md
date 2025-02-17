@@ -8,6 +8,7 @@ Each file has a corresponding dictionary .zip, which includes .xls, .xlsx, or .h
 
 Beware: variable names frequently change between years. In other cases, the variable name will stay the same but the value levels will change (e.g. 1,2,3 in 2000 and 5,10,15,20 in 2001). I don't have a good answer for comparing between years, besides looking at the data dictionaries. If you have a better answer please share!
 
+In addition to these changes, the R script has been updated to allow querying and combining specific variables into a dataframe, but then also making that dataframe interpretable through replacing dummy values in the files with their string values from the labels dictionary. 
 
 ## Functions
 ### Scrape list of available files
