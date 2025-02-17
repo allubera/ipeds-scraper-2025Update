@@ -62,35 +62,57 @@ def downloadDicts(start, stop):
                 os.remove("dict/" + str(i) +'/' + urlname)
 
 # As of the current date, xlrd has explicitly removed support for anything other than xls files.
-# I am working on a fix, but current the problem only relates to making the master dictionary and doesn't hinder downloading the dictionaries. For now, I will just comment out 
-
-'''
-# For the Excel dictionaries, compile the varlist tabs
 def makeMasterDict(start, stop):
     print("*****************************")
     print("Assembling master dictionary")
     print("*****************************")
     # Set up dictionary CSV
-    with open('data/dictionary.csv', 'w') as f:
+    with open('data/dictionary.csv', 'w', newline='') as f:
         c = csv.writer(f)
         c.writerow(['year', 'dictname', 'dictfile', 'varnumber', 'varname', 'datatype' ,'fieldwidth', 'format', 'imputationvar', 'vartitle'])
-        f.close()
-
-        # For each Excel dictionary, take the contents and file name and add to master dictionary csv
-    for i in range(start,stop):
-        for file in os.listdir('dict/' + str(i) + '/'):
+    # List of possible sheet names
+    sheet_names = ['varlist', 'Varlist', 'VARLIST']
+    # Iterate through the specified years
+    for i in range(start, stop):
+        dict_path = f'dict/{i}/'
+        # Ensure directory exists before listing files
+        if not os.path.exists(dict_path):
+            print(f"Skipping {dict_path}, directory does not exist.")
+            continue
+        for file in os.listdir(dict_path):
             if file.endswith((".xls", ".xlsx")):
-                print("Adding " + str(i) + " " + file + " to dictionary")
+                print(f"Adding {i} {file} to dictionary")
                 dictname = file.split(".", 1)[0]
                 rowstart = [i, dictname, file]
-                workbook = xlrd.open_workbook('dict/' + str(i) +'/' + file, on_demand = True)
-                worksheet = workbook.sheet_by_name('varlist')
-                with open('data/dictionary.csv', 'a') as f:
-                    c = csv.writer(f)
-                    for r in range(2,worksheet.nrows):
-                        varrow = worksheet.row_values(r)
-                        row = rowstart + varrow
-                        c.writerow(row)
-'''
+                workbook_path = os.path.join(dict_path, file)
+                try:
+                    if file.endswith(".xls"):  # Handle old .xls format
+                        workbook = xlrd.open_workbook(workbook_path, on_demand=True)
+                        sheet_name = next((s for s in sheet_names if s in workbook.sheet_names()), None)
+                        if sheet_name:
+                            worksheet = workbook.sheet_by_name(sheet_name)
+                            rows = [worksheet.row_values(r) for r in range(2, worksheet.nrows)]
+                        else:
+                            print(f"Skipping {file}: No matching sheet found.")
+                            continue
+                    elif file.endswith(".xlsx"):  # Handle new .xlsx format
+                        workbook = openpyxl.load_workbook(workbook_path, data_only=True)
+                        sheet_name = next((s for s in sheet_names if s in workbook.sheetnames), None)
+                        if sheet_name:
+                            worksheet = workbook[sheet_name]
+                            rows = [[cell.value for cell in row] for row in worksheet.iter_rows(min_row=3)]  # Skip header rows
+                        else:
+                            print(f"Skipping {file}: No matching sheet found.")
+                            continue
+                    # Append data to dictionary CSV
+                    with open('data/dictionary.csv', 'a', newline='') as f:
+                        c = csv.writer(f)
+                        for varrow in rows:
+                            row = rowstart + varrow
+                            c.writerow(row)
+                except Exception as e:
+                    print(f"Error processing {file}: {e}")
+
+
 downloadDicts(args.start, args.stop)
-#makeMasterDict(args.start, args.stop)
+makeMasterDict(args.start, args.stop)
