@@ -22,7 +22,17 @@ Assembles [data/ipedsfiles.json](data/ipedsfiles.json) with info on topics of it
 ```python
 python3 scripts/scraperDescriptions.py
 ```
+### Download do files
+Download stata do files listed in [data/ipedsfiles.json](data/ipedsfiles.json) for a given range of years.
+```python
+python3 scripts/downloadStataDoFiles.py STARTYEAR STOPYEAR
+```
 
+### Download data files
+Download data files listed in [data/ipedsfiles.json](data/ipedsfiles.json) for a given range of years.
+```python
+python3 scripts/downloadData.py STARTYEAR STOPYEAR
+```
 ### Assemble a master dictionary
 Downloads and extracts dictionary files for given years from [data/ipedsfiles.json](data/ipedsfiles.json), compiles the .xls and .xlsx dictionaries into [data/dictionary.csv](data/dictionary.csv)
 * Note: pre-2009 dictionaries are saved in .html files and are not parsed here.
@@ -35,17 +45,7 @@ Reads re-naming conventions from do files and creates a master list of data labe
 python3 scripts/extract_and_compile_labels.py STARTYEAR STOPYEAR
 ```
 
-### Download do files
-Download stata do files listed in [data/ipedsfiles.json](data/ipedsfiles.json) for a given range of years.
-```python
-python3 scripts/downloadStataDoFiles.py STARTYEAR STOPYEAR
-```
 
-### Download data files
-Download data files listed in [data/ipedsfiles.json](data/ipedsfiles.json) for a given range of years.
-```python
-python3 scripts/downloadData.py STARTYEAR STOPYEAR
-```
 
 ### Get column names
 Get column names from downloaded files for a given range of years and save in a json.
