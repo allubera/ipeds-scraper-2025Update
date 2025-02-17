@@ -16,14 +16,31 @@ Assembles [data/ipedsfiles.json](data/ipedsfiles.json) with info on all availabl
 python3 scripts/scraper.py
 ```
 
+### Make list of available files available for browsing
+Assembles [data/ipedsfiles.json](data/ipedsfiles.json) with info on topics of items for easier searching 
+```python
+python3 scripts/scraperDescriptions.py
+```
+
 ### Assemble a master dictionary
 Downloads and extracts dictionary files for given years from [data/ipedsfiles.json](data/ipedsfiles.json), compiles the .xls and .xlsx dictionaries into [data/dictionary.csv](data/dictionary.csv)
 * Note: pre-2009 dictionaries are saved in .html files and are not parsed here.
 ```python
 python3 scripts/makeDictionary.py STARTYEAR STOPYEAR
 ```
+### Assemble a master data label repository
+Reads re-naming conventions from do files and creates a master list of data labels and values by year and file for later matching 
+```python
+python3 scripts/extract_and_compile_labels.py STARTYEAR STOPYEAR
+```
 
-### Download files
+### Download do files
+Download stata do files listed in [data/ipedsfiles.json](data/ipedsfiles.json) for a given range of years.
+```python
+python3 scripts/downloadStataDoFiles.py STARTYEAR STOPYEAR
+```
+
+### Download data files
 Download data files listed in [data/ipedsfiles.json](data/ipedsfiles.json) for a given range of years.
 ```python
 python3 scripts/downloadData.py STARTYEAR STOPYEAR
