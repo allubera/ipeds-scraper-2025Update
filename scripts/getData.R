@@ -104,3 +104,52 @@ rm(allfiles, datacols)
 # Example - some institutional characteristics
 instvars <- c("fips", "stabbr", "instnm", "sector", "pset4flg", "instcat", "ccbasic", "control", "deggrant", "opeflag", "opeind", "opeid", "carnegie", "hloffer")
 institutions <- returnData(instvars)
+
+
+
+# Make Data interpretable 
+labels <- read_excel("/Users/amberlubera/Documents/ipeds-scraper-master/data/labels.xlsx")
+labels <- na.omit(labels)
+institutions <- na.omit(instiutitons)
+
+#remove label title from everything 
+labels$label_name = gsub("label_", "",labels$label_name)
+
+institutions <- institutions %>%
+  mutate(across(everything(), as.character))
+labels <- labels %>%
+  mutate(value = as.character(value),
+         year = as.character(year))  # Ensure year is also character
+
+# Function to replace values with labels safely
+replace_values_with_labels <- function(data, labels) {
+  for (col in colnames(data)) {
+    if (col %in% labels$label_name) {  # Check if column exists in labels
+      for (year in unique(na.omit(data$year))) {  # Remove NA values in year
+        year_labels <- labels %>%
+          filter(label_name == col & year == as.character(year))  # Ensure year is compared as character
+        
+        if (nrow(year_labels) > 0) {
+          for (i in 1:nrow(year_labels)) {
+            value_match <- year_labels$value[i]
+            label_replacement <- year_labels$label[i]
+            
+            # Check if there are actual matches to avoid NA issues
+            if (any(data$year == year & data[[col]] == value_match, na.rm = TRUE)) {
+              data[data$year == year & data[[col]] == value_match, col] <- label_replacement
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return(data)
+}
+
+# Apply function
+updated_data <- replace_values_with_labels(institutions, labels)
+
+
+
+
