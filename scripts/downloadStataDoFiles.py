@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Download all IPEDS  Complete Do Files for a given set of years
 Extract and keep final/revised versions
