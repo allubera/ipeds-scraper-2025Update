@@ -4,10 +4,12 @@ library("jsonlite")
 library("dplyr")
 library("stringr")
 library("openxlsx")
+library("readxl")
 
-ipedspath <- "/Users/hrecht/Documents/ipeds-scraper/"
-allfiles <- fromJSON(paste(ipedspath, "data/ipedsfiles.json", sep=""))
-datacols <- fromJSON(paste(ipedspath, "data/ipedscolumns.json", sep=""))
+
+ipedspath <- "C:/Users/allubera/Documents/PythonScripts/ipeds-scraper-2025/"
+allfiles <- fromJSON(readLines("C:/Users/allubera/Documents/PythonScripts/ipeds-scraper-2025/data/ipedsfiles.json",warn=F))
+datacols <- fromJSON(readLines("C:/Users/allubera/Documents/PythonScripts/ipeds-scraper-2025/data/ipedscolumns.json",warn = F))
 
 # IPEDS dictionary
 dictionary <- read.csv(paste(ipedspath, "data/dictionary.csv", sep=""), stringsAsFactors = F)
@@ -105,12 +107,10 @@ rm(allfiles, datacols)
 instvars <- c("fips", "stabbr", "instnm", "sector", "pset4flg", "instcat", "ccbasic", "control", "deggrant", "opeflag", "opeind", "opeid", "carnegie", "hloffer")
 institutions <- returnData(instvars)
 
-
-
 # Make Data interpretable 
-labels <- read_excel("/Users/amberlubera/Documents/ipeds-scraper-master/data/labels.xlsx")
+labels <- read_excel("C:/Users/allubera/Documents/PythonScripts/ipeds-scraper-2025/data/labels.xlsx")
 labels <- na.omit(labels)
-institutions <- na.omit(instiutitons)
+institutions <- na.omit(institutions)
 
 #remove label title from everything 
 labels$label_name = gsub("label_", "",labels$label_name)
@@ -149,6 +149,10 @@ replace_values_with_labels <- function(data, labels) {
 
 # Apply function
 updated_data <- replace_values_with_labels(institutions, labels)
+
+
+
+
 
 
 
