@@ -149,11 +149,3 @@ replace_values_with_labels <- function(data, labels) {
 
 # Apply function
 updated_data <- replace_values_with_labels(institutions, labels)
-
-
-
-
-
-
-
-
