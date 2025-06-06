@@ -79,4 +79,4 @@ extract_and_compile_labels(args.start, args.stop)
 # I also found this note which we will need to think about. O noticed that this was the same in many files. 
 
 # Expected output:
-# {'gender': {1: 'Male', 2: 'Female'}, 'age_group': {1: '18-25', 2: '26-35', 3: '36+'}, 'education': {1: 'High School', 2: "Bachelor's", 3: "Master's", 4: 'PhD'}}
+# {'gender': {1: 'Male', 2: 'Female'}, 'age_group': {1: '
