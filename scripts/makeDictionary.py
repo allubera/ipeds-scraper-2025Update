@@ -11,6 +11,7 @@ import os
 import xlrd
 import csv
 import argparse
+import openpyxl
 
 parser = argparse.ArgumentParser()
 parser.add_argument("start", help="start year",
@@ -61,7 +62,7 @@ def downloadDicts(start, stop):
                 # Remove zip file
                 os.remove("dict/" + str(i) +'/' + urlname)
 
-# As of the current date, xlrd has explicitly removed support for anything other than xls files.
+# For the Excel dictionaries, compile the varlist tabs
 def makeMasterDict(start, stop):
     print("*****************************")
     print("Assembling master dictionary")
